@@ -1,2 +1,2 @@
-# moneyguaed-xamarin
+# moneyguard-xamarin
 Moneyguard SDK for Xamarin
