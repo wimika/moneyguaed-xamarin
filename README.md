@@ -24,7 +24,6 @@ using Com.Wimika.MoneyguardCore
 
 public class BasicClientImpl : IBasicClient
 {
-        public IntPtr Handle => throw new NotImplementedException();
 
         public void OnCredentialScanCompleted(long p0, CredentialScanResult p1)
         {
