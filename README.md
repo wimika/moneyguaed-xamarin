@@ -3,7 +3,7 @@
 ## MoneyGuard SDK For Xamarin Sample
 
 MoneyGuard SDK For Xamarin allows financial institutions to embed [Moneyguard](https://wimika.ng/moneyguard/) into
-their Xamatin applications. 
+their Xamarin applications. 
 
 ## Getting Started
 
@@ -22,7 +22,8 @@ Moneyguard SDK.
 ```java
 using Com.Wimika.MoneyguardCore
 
-public class BasicClientImpl : IBasicClient {
+public class BasicClientImpl : IBasicClient
+{
         public IntPtr Handle => throw new NotImplementedException();
 
         public void OnCredentialScanCompleted(long p0, CredentialScanResult p1)
@@ -60,6 +61,7 @@ functionality :
  - Credential Compromise Check
  - Create a Typing Profile Recorder
  - Preview a banking transaction before it is processed
+
 It will be provided in a callback to the OnSessionCreated method of your IBasicClient implementation
 ```java
 
