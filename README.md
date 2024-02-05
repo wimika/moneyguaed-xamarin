@@ -16,8 +16,8 @@ their Xamarin applications.
 ## Usage For Android
 
 ### 1) Add Nuget Packages to Your Project
-Shared Xamarin Project - ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Types)
-Android Project - ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Android)
+- Shared Xamarin Project - (Wimika.MoneyGuard.Core.Types) ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Types)
+- Android Project - (Wimika.MoneyGuard.Core.Android) ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Android)
 
 
 ### 2) Initialize MoneyGuard 
@@ -38,7 +38,6 @@ string sessionToken = <session-token>;//session token that will be passed to Par
 Task<IBasicSession> session = await MoneyguardSdk.Register(activity, partnerBankId, sessionToken);
 
 ```
-
 
 
 
