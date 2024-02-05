@@ -9,7 +9,7 @@ their Xamarin applications.
 
 1. Obtain a partner Id from Wimika RMS Technologies
 
-2. Implement a REST API endpoint that exposes [Wimika Partner Bank Service API](https://wimika.gitbook.io/wimika-partner-bank-api-documentation/)
+2. Implement a REST API endpoint that exposes [Wimika Partner Bank Service API](https://wimika.gitbook.io/wimika-partner-bank-api-documentation/), provide your service url to Wimika RMS Technologies
 
 3. Embed Wimika Moneyguard in your Android Application
 
