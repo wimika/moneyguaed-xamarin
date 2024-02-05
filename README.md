@@ -15,11 +15,16 @@ their Xamarin applications.
 
 ## Usage For Android
 
+### 1) Add Nuget Packages to Your Project
+Shared Xamarin Project - ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Types)
+Android Project - ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Android)
 
-### 1) Initialize MoneyGuard 
+
+### 2) Initialize MoneyGuard 
 
 Initialize Moneyguard. An IBasicSession is an implementation of the methods that support the following Moneyguard
 functionality :
+ - Obtain an authorization token for MoneyGuard REST API service calls
  - Credential Compromise Check
  - Create a Typing Profile Recorder
  - Preview a banking transaction before it is processed
@@ -33,6 +38,8 @@ string sessionToken = <session-token>;//session token that will be passed to Par
 Task<IBasicSession> session = await MoneyguardSdk.Register(activity, partnerBankId, sessionToken);
 
 ```
+
+
 
 
 
