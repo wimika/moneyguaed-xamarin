@@ -45,7 +45,7 @@ var moneyGuardAuthToken = session.SessionId;
 
 ```
 
-Sample project in this repository makes that call [here](https://github.com/wimika/moneyguard-xamarin/blob/0392cb15d9e19683e411f72bed1a70271dbc74d5/MoneyGuardSdkExample/MoneyGuardSdkExample.Android/MainActivity.cs#L27)
+Sample project in this repository calls MoneyGuardSdk.Register [here](https://github.com/wimika/moneyguard-xamarin/blob/0392cb15d9e19683e411f72bed1a70271dbc74d5/MoneyGuardSdkExample/MoneyGuardSdkExample.Android/MainActivity.cs#L27)
 
 
 
