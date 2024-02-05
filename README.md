@@ -37,6 +37,12 @@ string sessionToken = <session-token>;//session token that will be passed to Par
 
 Task<IBasicSession> session = await MoneyguardSdk.Register(activity, partnerBankId, sessionToken);
 
+...
+
+var moneyGuardAuthToken = session.SessionId;
+
+//use moneyGuardAuthToken in REST API call using header "Authorization" : "Bearer  <moneyGuardAuthToken>"
+
 ```
 
 Sample project in this repository makes that call [here](https://github.com/wimika/moneyguard-xamarin/blob/0392cb15d9e19683e411f72bed1a70271dbc74d5/MoneyGuardSdkExample/MoneyGuardSdkExample.Android/MainActivity.cs#L27)
