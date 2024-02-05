@@ -27,7 +27,7 @@ functionality :
  - Obtain an authorization token for MoneyGuard REST API service calls
  - Credential Compromise Check
  - Create a Typing Profile Recorder
- - Preview a banking transaction before it is processed
+ - Preview a banking debit transaction before it is processed
 
 ```java
 
