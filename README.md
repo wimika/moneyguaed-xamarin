@@ -53,7 +53,7 @@ Sample project in this repository calls MoneyGuardSdk.Register [here](https://gi
 ### 3) Credential Compromise Check
 
 A compromised user credential can lead to account takeover with severe adverse financial consequences for an account holder.
-Moneyguard SDK supports checking a users credentials for existence of compromise. If such compromise is detected it is strongly advise to
+Moneyguard SDK supports checking a users credentials for existence of compromise. If such compromise is detected it is strongly advised to
 suggest that users change their passwords. The code fragment below shows example of how to use MoneyGuard to check for credential compromise.
 
 ```java
@@ -63,7 +63,7 @@ using Wimika.MoneyGuard.Core.Types;
 
 var credential = new Credential
 {
-   HashAlgorithm = HashAlgorithm.SHA256, //SHA-256 Algorithm
+   HashAlgorithm = HashAlgorithm.SHA256, //SHA-256 Algorithm for example
    PasswordFragmentLength = StartingCharactersLength.FOUR, //how many characters from beginning of password to be hashed
    PasswordStartingCharactersHash = <hash>, //HashAlgorithm hash of first number of characters in PasswordFragmentLength
    Domain = credential.Domain, //Domain for which credential is to be checked
@@ -92,6 +92,57 @@ else
 ```
 
 ### 4) Typing Profile Check
+
+Moneyguard SDK supports determining the identity of a mobile app user by obtaining a record of how a user types. The process entails an initial
+period where the user enrolls their typing profile. 
+
+```java
+
+...
+using Wimika.MoneyGuard.Core.Types;
+
+//get Typing profile recorder
+var typingProfileRecorder = session.TypingProfileRecorder;
+
+//get the typing fragment to display to the user
+var typingFragment = typingProfileRecorder.TypingFragment;
+
+
+//attach event handlers to the entry widget that will accept the user's typing of the fragment
+//When a key down event is detected call ->
+
+typingProfileRecorder.OnKeydown();
+
+//When text changes call ->
+typingProfileRecorder.OnTextChanged(newText);
+
+//when the user has completed typing the fragment (note that typed fragment MUST match typingProfileRecorder.TypingFragment) call ->
+
+var typingProfileMatchingResult = typingProfileRecorder.MatchTypingProfile();
+
+//handle result
+if(typingProfileMatchingResult.IsEnrolledOnThisDevice){
+   if(typingProfileMatchingResult.Matched){
+      if(typingProfileMatchingResult.HighConfidence){
+          //typing profile matched with high confidence
+          //proceed
+      }
+      else{
+         //typing profile matched with low confidence
+          //proceed with caution
+      }
+   }
+   else{
+      //typing profile did not match, do not proceed
+   }
+}
+else{
+   //typing profile enrollment not completed on this device
+   //proceed with caution
+}
+
+```
+
 
 ### 5) Debit Transaction Check
 
