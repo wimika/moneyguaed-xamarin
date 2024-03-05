@@ -146,10 +146,45 @@ else{
 
 ### 5) Debit Transaction Check
 
+MoneyGuard SDK supports the ability to monitor debit transaction patterns as well as mobile app usage risks that may indicate the likelihood of exposure to cyberfraud. The Moneyguard App is required to provide the capture of the usage risks due to device, network , application and user attack surfaces. Example of Debit transaction check is shown below
+
+
+```java
+
+...
+using Wimika.MoneyGuard.Core.Types;
+
+var transaction = new DebitTransaction
+{
+    SourceAccountNumber = "CHK-123456789", //Account to debit
+    Amount = 100000,
+    Memo = "Electricity Purchase",
+    DestinationBank = "098", // Destination Bank Code
+    DestinationAccountNumber = "KGD-987654321" //Destination Account Number
+};
+
+var debitTransactionCheckResult = await session.CheckDebitTransaction( transaction);
+
+
+//handle results
+foreach(var specificRisk in debitTransactionCheckResult.Risks){
+
+     if(status == RiskStatus.RISK_STATUS_WARN || status == RiskStatus.RISK_STATUS_UNKNOWN)
+     {
+        //warn user and proceed with caution
+     }
+     else if(status == RiskStatus.RISK_STATUS_UNSAFE)
+     {
+        //do not proceed
+        break;
+     }
+     else
+     {
+         //proceed
+     }
+}
 
 
 
-
-
-
+```
 
