@@ -31,6 +31,9 @@ functionality :
 
 ```java
 
+...
+using Wimika.MoneyGuard.Core.Android;
+
 Activity activity; //Main Activity
 int partnerBankId = <partner-bank-id>; //obtained from Wimika
 string sessionToken = <session-token>;//session token that will be passed to Partner Bank REST Service to validate user session 
@@ -46,6 +49,53 @@ var moneyGuardAuthToken = session.SessionId;
 ```
 
 Sample project in this repository calls MoneyGuardSdk.Register [here](https://github.com/wimika/moneyguard-xamarin/blob/0392cb15d9e19683e411f72bed1a70271dbc74d5/MoneyGuardSdkExample/MoneyGuardSdkExample.Android/MainActivity.cs#L27)
+
+### 3) Credential Compromise Check
+
+A compromised user credential can lead to account takeover with severe adverse financial consequences for an account holder.
+Moneyguard SDK supports checking a users credentials for existence of compromise. If such compromise is detected it is strongly advise to
+suggest that users change their passwords. The code fragment below shows example of how to use MoneyGuard to check for credential compromise.
+
+```java
+
+...
+using Wimika.MoneyGuard.Core.Types;
+
+var credential = new Credential
+{
+   HashAlgorithm = HashAlgorithm.SHA256, //SHA-256 Algorithm
+   PasswordFragmentLength = StartingCharactersLength.FOUR, //how many characters from beginning of password to be hashed
+   PasswordStartingCharactersHash = <hash>, //HashAlgorithm hash of first number of characters in PasswordFragmentLength
+   Domain = credential.Domain, //Domain for which credential is to be checked
+   Username = credential.Username, //Username to be checked
+}
+
+Task<CredentialScanResult> credentialScanResult =  await session.CheckCredential(credential);
+
+//handle results
+var status = credentialScanResult;
+if(status == RiskStatus.RISK_STATUS_WARN || status == RiskStatus.RISK_STATUS_UNKNOWN)
+{
+   // warn user that their credentials may be compromised and they are strongly advised to
+   //change their passowrd
+}
+else if(status == RiskStatus.RISK_STATUS_UNSAFE)
+{
+   //alert user that their credentials are compromised. Require user to change their password before
+   //permitting any system access
+}
+else
+{
+    //proceed
+}
+
+```
+
+### 4) Typing Profile Check
+
+### 5) Debit Transaction Check
+
+
 
 
 
