@@ -94,7 +94,7 @@ else
 ### 4) Typing Profile Check
 
 Moneyguard SDK supports determining the identity of a mobile app user by obtaining a record of how a user types. The process entails an initial
-period where the user enrolls their typing profile. 
+period where the user enrolls their typing profile. The actual mechanism requires MoneyGuard SDK clients to attach event handlers to monitor KeyDown and TextChanged events from a entry widget where user will type a specific piece of text. Example usage is shown below.
 
 ```java
 
