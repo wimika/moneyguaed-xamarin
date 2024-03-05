@@ -118,7 +118,7 @@ typingProfileRecorder.OnTextChanged(newText);
 
 //when the user has completed typing the fragment (note that typed fragment MUST match typingProfileRecorder.TypingFragment) call ->
 
-var typingProfileMatchingResult = typingProfileRecorder.MatchTypingProfile();
+var typingProfileMatchingResult = await typingProfileRecorder.MatchTypingProfile();
 
 //handle result
 if(typingProfileMatchingResult.IsEnrolledOnThisDevice){
