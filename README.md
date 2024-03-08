@@ -61,19 +61,21 @@ suggest that users change their passwords. The code fragment below shows example
 ...
 using Wimika.MoneyGuard.Core.Types;
 
+
+
 var credential = new Credential
 {
    HashAlgorithm = HashAlgorithm.SHA256, //SHA-256 Algorithm for example
    PasswordFragmentLength = StartingCharactersLength.FOUR, //how many characters from beginning of password to be hashed
-   PasswordStartingCharactersHash = <hash>, //HashAlgorithm hash of first number of characters in PasswordFragmentLength
-   Domain = credential.Domain, //Domain for which credential is to be checked
-   Username = credential.Username, //Username to be checked
+   PasswordStartingCharactersHash = "<hash>", //HashAlgorithm hash of first number of characters in PasswordFragmentLength
+   Domain = "<domain>", //Domain for which credential is to be checked
+   Username = "<username>", //Username to be checked
 }
 
 Task<CredentialScanResult> credentialScanResult =  await session.CheckCredential(credential);
 
 //handle results
-var status = credentialScanResult;
+var status = credentialScanResult.Status;
 if(status == RiskStatus.RISK_STATUS_WARN || status == RiskStatus.RISK_STATUS_UNKNOWN)
 {
    // warn user that their credentials may be compromised and they are strongly advised to
