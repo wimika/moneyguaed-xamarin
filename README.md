@@ -48,7 +48,7 @@ var moneyGuardAuthToken = session.SessionId;
 
 ```
 
-Sample project in this repository calls MoneyGuardSdk.Register [here]()
+Sample project in this repository calls MoneyGuardSdk.Register [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/MainActivity.cs#L51)
 
 ### 3) Credential Compromise Check
 
@@ -92,6 +92,7 @@ else
 }
 
 ```
+Sample project in this repository performs Credential Compromise Check [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/CredentialCheckActivity.cs#L63)
 
 ### 4) Typing Profile Check
 
@@ -144,7 +145,7 @@ else{
 }
 
 ```
-
+Sample project in this repository performs Typing Profile Check [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/TypingProfileMatchingActivity.cs#L61)
 
 ### 5) Debit Transaction Check
 
@@ -190,6 +191,8 @@ foreach(var specificRisk in debitTransactionCheckResult.Risks){
 
 ```
 
+Sample project in this repository performs Debit Transaction Check [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/DebitCheckActivity.cs#L47)
+
 ### 6) Get Risk Profile
 
 This method is similar to Debit Check except that it can be called at any time to check the risk profile of the current session before permitting a sensitive operation.
@@ -225,4 +228,4 @@ foreach(var specificRisk in result.Risks){
 
 
 ```
-
+Sample project in this repository performs GetRiskProfile [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/ChoosingActivity.cs#L46)
