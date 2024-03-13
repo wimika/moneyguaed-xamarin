@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Username EditText -->
+        <EditText
+        android:id="@+id/editTextSource"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Source Account Number"
+        android:inputType="text" />
+
+        <EditText
+        android:id="@+id/editTextDestinationBank"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Destination Bank"
+        android:inputType="text" />
+
+        <EditText
+        android:id="@+id/editTextDestinationAccount"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Destination Account Number"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/editTextAmount"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Amount"
+        android:inputType="numberDecimal" />
+
+    <!-- Password EditText -->
+    <EditText
+        android:id="@+id/editTextMemo"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Memo"
+        android:inputType="text" />
+
+    <!-- Login Button -->
+    <Button
+        android:id="@+id/buttonCheckDebit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check Debit" />
+
+        <Button
+        android:id="@+id/buttonDebitGoback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Go Back" />
+
+</LinearLayout>

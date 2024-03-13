@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Username EditText -->
+
+
+    <TextView
+        android:id="@+id/textFragment"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text=""
+        android:hint=""/>
+    
+    <!-- Password EditText -->
+    <EditText
+        android:id="@+id/editTextFragment"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Please type words shown above"
+        android:inputType="text" />
+
+    <!-- Login Button -->
+    <Button
+        android:id="@+id/buttonCheckTypingProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check Typing Profile" />
+
+        <Button
+        android:id="@+id/buttonTypingGoback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Go Back" />
+
+</LinearLayout>
