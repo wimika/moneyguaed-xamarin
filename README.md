@@ -48,7 +48,7 @@ var moneyGuardAuthToken = session.SessionId;
 
 ```
 
-Sample project in this repository calls MoneyGuardSdk.Register [here](https://github.com/wimika/moneyguard-xamarin/blob/0392cb15d9e19683e411f72bed1a70271dbc74d5/MoneyGuardSdkExample/MoneyGuardSdkExample.Android/MainActivity.cs#L27)
+Sample project in this repository calls MoneyGuardSdk.Register [here]()
 
 ### 3) Credential Compromise Check
 
@@ -170,6 +170,42 @@ var debitTransactionCheckResult = await session.CheckDebitTransaction( transacti
 
 //handle results
 foreach(var specificRisk in debitTransactionCheckResult.Risks){
+
+     if(status == RiskStatus.RISK_STATUS_WARN || status == RiskStatus.RISK_STATUS_UNKNOWN)
+     {
+        //warn user and proceed with caution
+     }
+     else if(status == RiskStatus.RISK_STATUS_UNSAFE)
+     {
+        //do not proceed
+        break;
+     }
+     else
+     {
+         //proceed
+     }
+}
+
+
+
+```
+
+### 6) Get Risk Profile
+
+This method is similar to Debit Check except that it can be called at any time to check the risk profile of the current session before permitting a sensitive operation.
+
+
+```java
+
+...
+using Wimika.MoneyGuard.Core.Types;
+
+
+var result = await session.GetRiskProfile();
+
+
+//handle results
+foreach(var specificRisk in result.Risks){
 
      if(status == RiskStatus.RISK_STATUS_WARN || status == RiskStatus.RISK_STATUS_UNKNOWN)
      {
