@@ -19,8 +19,27 @@ their Xamarin applications.
 - Wimika.MoneyGuard.Core.Android ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Android)
 - Wimika.MoneyGuard.Application ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Application)
 
+### 2) Ensure Standalone  Moneyguard App is installed
 
-### 2) Initialize MoneyGuard 
+The standalone MoneyGuard App is required to receive information about user and device risk profile. 
+
+```java
+
+...
+using Wimika.MoneyGuard.Core.Android;
+using Wimika.MoneyGuard.Application;
+
+Task<StartupRisk> startupRisk = await MoneyguardSdk.Startup();
+
+if(!startupRisk.MoneyguardActive){
+  await MoneyGuardApp.Instal();
+}
+
+
+...
+
+```
+### 3) Initialize MoneyGuard
 
 Initialize Moneyguard. An IBasicSession is an implementation of the methods that support the following Moneyguard
 functionality :
@@ -50,7 +69,7 @@ var moneyGuardAuthToken = session.SessionId;
 
 Sample project in this repository calls MoneyGuardSdk.Register [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/MainActivity.cs#L51)
 
-### 3) Credential Compromise Check
+### 4) Credential Compromise Check
 
 A compromised user credential can lead to account takeover with severe adverse financial consequences for an account holder.
 Moneyguard SDK supports checking a users credentials for existence of compromise. If such compromise is detected it is strongly advised to
@@ -94,7 +113,7 @@ else
 ```
 Sample project in this repository performs Credential Compromise Check [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/CredentialCheckActivity.cs#L63)
 
-### 4) Typing Profile Check
+### 5) Typing Profile Check
 
 Moneyguard SDK supports determining the identity of a mobile app user by obtaining a record of how a user types. The process entails an initial
 period where the user enrolls their typing profile. The actual mechanism requires MoneyGuard SDK clients to attach event handlers to monitor KeyDown and TextChanged events from a entry widget where user will type a specific piece of text. Example usage is shown below.
@@ -147,7 +166,7 @@ else{
 ```
 Sample project in this repository performs Typing Profile Check [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/TypingProfileMatchingActivity.cs#L61)
 
-### 5) Debit Transaction Check
+### 6) Debit Transaction Check
 
 MoneyGuard SDK supports the ability to monitor debit transaction patterns as well as mobile app usage risks that may indicate the likelihood of exposure to cyberfraud. The Moneyguard App is required to provide the capture of the usage risks due to device, network , application and user attack surfaces. Example of Debit transaction check is shown below
 
@@ -193,7 +212,7 @@ foreach(var specificRisk in debitTransactionCheckResult.Risks){
 
 Sample project in this repository performs Debit Transaction Check [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/DebitCheckActivity.cs#L47)
 
-### 6) Get Risk Profile
+### 7) Get Risk Profile
 
 This method is similar to Debit Check except that it can be called at any time to check the risk profile of the current session before permitting a sensitive operation.
 
