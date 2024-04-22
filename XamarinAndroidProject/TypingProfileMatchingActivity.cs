@@ -18,6 +18,8 @@ namespace AndroidTestApp
     {
         private EditText editTextFragment;
         private TextView editFragment;
+        private ITypingProfileRecorder recorder;
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -34,32 +36,46 @@ namespace AndroidTestApp
 
             editTextFragment = FindViewById<EditText>(Resource.Id.editTextFragment);
             editFragment = FindViewById<TextView>(Resource.Id.textFragment);
-            editFragment.Text = SessionHolder.Session.TypingProfileRecorder.TypingFragment;
 
+            recorder = SessionHolder.Session.SessionTypingProfileRecorder;
+
+            editFragment.Text = recorder.TypingFragment;
+            
             editTextFragment.KeyPress += EditTextFragment_KeyPress;
             editTextFragment.AfterTextChanged += EditTextFragment_AfterTextChanged;
         }
 
         private void EditTextFragment_AfterTextChanged(object sender, Android.Text.AfterTextChangedEventArgs e)
         {
-            SessionHolder.Session.TypingProfileRecorder.OnTextChanged(editTextFragment.Text);
+            recorder.OnTextChanged(editTextFragment.Text);
         }
 
         private void EditTextFragment_KeyPress(object sender, View.KeyEventArgs e)
         {
-            SessionHolder.Session.TypingProfileRecorder.OnKeydown();
+            recorder.OnKeydown();
             e.Handled = false;
         }
 
         private async void GoBackClick(object sender, EventArgs eventArgs)
         {
-            StartActivity(typeof(ChoosingActivity));
+            recorder.Reset();
+
+            if (SessionHolder.LoginAfterTypingProfileCheck)
+            {
+                StartActivity(typeof(LogInActivity));
+            }else
+            {
+
+                StartActivity(typeof(ChoosingActivity));
+            }
         }
 
         private async void CheckTypingProfileClick(object sender, EventArgs eventArgs)
         {
-            var typingProfileMatchingResult = await SessionHolder.Session.TypingProfileRecorder.MatchTypingProfile();
+
+            var typingProfileMatchingResult = await SessionHolder.Session.TypingProfileMatcher.MatchTypingProfile( recorder);
             var message = "Not Enrolled";
+            bool notMatched = false;
 
             if (typingProfileMatchingResult.IsEnrolledOnThisDevice)
             {
@@ -78,7 +94,12 @@ namespace AndroidTestApp
                 {
                     //typing profile did not match, do not proceed
                     message = "Not matched";
+                    notMatched = true;
                 }
+            }
+            else if(typingProfileMatchingResult.HasOtherEnrollments)
+            {
+                message = "User Account has enrollment on other devices";
             }
 
             Toast.MakeText(
@@ -86,6 +107,24 @@ namespace AndroidTestApp
                 message,
                 ToastLength.Long
                 ).Show();
+
+            if(SessionHolder.LoginAfterTypingProfileCheck)
+            {
+
+                SessionHolder.LoginAfterTypingProfileCheck = false;
+
+                if (notMatched)
+                {
+                    StartActivity(typeof(LogInActivity));
+                }
+                else
+                {
+                    StartActivity(typeof(ChoosingActivity));
+                }
+            }
+
+
+
         }
     }
 

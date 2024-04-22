@@ -16,6 +16,12 @@ namespace AndroidTestApp
     {
         internal static IBasicSession Session { get; set; }
 
+        internal static string Email { get; set; }
+
+        internal static bool LoginAfterTypingProfileCheck { get; set; }
+
+        internal static string Password { get; set; }
+
         internal static string StatusAsString(RiskStatus status)
         {
             switch (status)

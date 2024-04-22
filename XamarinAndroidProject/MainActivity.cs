@@ -11,18 +11,18 @@ using Wimika.MoneyGuard.Core.Android;
 using System.Threading.Tasks;
 using Android.Widget;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
+using Wimika.MoneyGuard.Core.Types;
 
 namespace AndroidTestApp
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
-        private EditText usernameEditText;
-        private EditText passwordEditText;
+        private TextView text; 
 
         private const int WIMIKA_XAMARIN_BANK = 101;
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
@@ -32,35 +32,43 @@ namespace AndroidTestApp
             SetSupportActionBar(toolbar);
 
 
+            text = (TextView)FindViewById(Resource.Id.textViewWarning);
 
-            var button = FindViewById(Resource.Id.buttonLogin);
-            button.Click += LoginClick;
 
-            usernameEditText = FindViewById<EditText>(Resource.Id.editTextUsername);
-            passwordEditText = FindViewById<EditText>(Resource.Id.editTextPassword);
+            var button = FindViewById(Resource.Id.buttonProceed);
+            button.Click += ProceedClick;
+             
 
+
+            var s = await MoneyGuardSdk.Startup(this); 
+
+            if(s.MoneyGuardActive)
+            {
+                var risky = false;
+                foreach(var r in s.Risks)
+                {
+                    if(r.Status != RiskStatus.RISK_STATUS_SAFE)
+                    {
+                        risky = true;
+                        break;
+                    }
+                }
+                text.Text = risky ? "The WiFi network you are connected to is not secure. Your digital banking activities may be compromised if you proceed with logging in and transacting" : "Your Wifi Connection is Secure";
+            }
+            else
+            {
+                text.Text = "Moneyguard not active";
+            }
+
+            
 
         }
 
-        private async void LoginClick(object sender, EventArgs eventArgs)
+        private async void ProceedClick(object sender, EventArgs eventArgs)
         {
-            var response = await new LoginService().Session(usernameEditText.Text, passwordEditText.Text);
            
-            try
-            {
-                var session = await MoneyGuardSdk.Register(this, WIMIKA_XAMARIN_BANK, response.Data.SessionId);
-                Console.WriteLine("InstallationId -> " + session.InstallationId);
-                Console.WriteLine("SessionId -> " + session.SessionId);
-                SessionHolder.Session = session;
-                StartActivity(typeof(ChoosingActivity));
-            }
-            catch (Exception ex)
-            {
-                Toast.MakeText(this, ex.Message, ToastLength.Long).Show();
-                Console.WriteLine(ex.ToString());
-            }
 
-
+            StartActivity(typeof(LogInActivity));
 
         }
 
@@ -81,32 +89,6 @@ namespace AndroidTestApp
             return base.OnOptionsItemSelected(item);
         }
 
-        //private async void  FabOnClick(object sender, EventArgs eventArgs)
-        //{
-        //    View view = (View) sender;
-        //    //Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-        //    //    .SetAction("Action", (View.IOnClickListener)null).Show();
-
-        //    await Task.Factory.StartNew(
-        //         async () =>
-        //         {
-        //            var partnerBankId = 102;
-        //            var sessionToken = "R002755023";
-        //             try
-        //             {
-        //                 var session = await MoneyGuardSdk.Register(this, partnerBankId, sessionToken);
-        //                 Console.WriteLine("InstallationId -> " + session.InstallationId);
-        //                 Console.WriteLine("SessionId -> " + session.SessionId);
-        //             }
-        //             catch (Exception ex)
-        //             {
-        //                 Console.WriteLine(ex.ToString());
-        //             }
-                    
-        //        }
-        //       );
-
-        //}
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

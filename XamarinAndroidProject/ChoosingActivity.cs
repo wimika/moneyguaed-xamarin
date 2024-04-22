@@ -1,20 +1,31 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Provider;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using AndroidX.Core.Content;
+using Java.IO;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
+using System.Threading.Tasks;
+using Wimika.MoneyGuard.Application;
+using Console = System.Console;
+using Environment = System.Environment;
+using File = System.IO.File;
 
 namespace AndroidTestApp
 {
     [Activity(Label = "ChoosingActivity")]
     public class ChoosingActivity : Activity
     {
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
@@ -33,7 +44,26 @@ namespace AndroidTestApp
 
             var buttonTypingProfileMatching = FindViewById(Resource.Id.buttonTypingProfileMatching);
             buttonTypingProfileMatching.Click += TypingProfileMatchingClick;
+
+            var installed = false;
+            try
+            {
+                installed = MoneyGuardApp.IsInstalled(this);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            var buttonInstallMoneyguard = (Button)FindViewById(Resource.Id.buttonInstallMoneyguard);
+            buttonInstallMoneyguard.Visibility = !installed ? ViewStates.Visible : ViewStates.Invisible;
+            buttonInstallMoneyguard.Click += InstallMoneyguardClick;
             // Create your application here
+        }
+
+        private async void InstallMoneyguardClick(object sender, EventArgs eventArgs)
+        {
+            await Wimika.MoneyGuard.Application.MoneyGuardApp.Install();
         }
 
         private async void CredentialCheckClick(object sender, EventArgs eventArgs)
