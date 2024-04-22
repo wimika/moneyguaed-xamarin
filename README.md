@@ -16,7 +16,6 @@ their Xamarin applications.
 ## Usage For Android
 
 ### 1) Add Nuget Packages to Your Project
-- Shared Xamarin Project - (Wimika.MoneyGuard.Core.Types) ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Types)
 - Android Project - (Wimika.MoneyGuard.Core.Android) ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Android)
 
 
