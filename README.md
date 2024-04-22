@@ -117,18 +117,29 @@ Sample project in this repository performs Credential Compromise Check [here](ht
 ### 5) Typing Profile Check
 
 Moneyguard SDK supports determining the identity of a mobile app user by obtaining a record of how a user types. The process entails an initial
-period where the user enrolls their typing profile. The actual mechanism requires MoneyGuard SDK clients to attach event handlers to monitor KeyDown and TextChanged events from a entry widget where user will type a specific piece of text. Example usage is shown below.
+period where the user enrolls their typing profile. Three modes of recording typing profile are supported;
+- Fixed Internal Text
+- Fixed User Text
+- Freeform Text
+The actual mechanism requires MoneyGuard SDK clients to attach event handlers to monitor KeyDown and TextChanged events from a entry widget where user will type a specific piece of text. Example usage is shown below.
 
 ```java
 
 ...
 using Wimika.MoneyGuard.Core.Types;
 
-//get Typing profile recorder
-var typingProfileRecorder = session.TypingProfileRecorder;
+Activity activity;
+IBasicSession session;
+
+//get Typing profile recorder for fixed internal text (highest level of protection)
+var typingProfileRecorder = session.SessionTypingProfileRecorder;
+
+//typingProfileRecorder = MoneyGuardSdk.CreateTypingProfileRecorder(ativity, TypingProfileParameters.ANYTEXT); //recorder for freeform text
+
+//typingProfileRecorder = MoneyGuardSdk.CreateTypingProfileRecorder(ativity, TypingProfileParameters.CreateForFixeduserText(<id>)); //recorder for fixed user supplied text id must be unique to the text fragment
 
 //get the typing fragment to display to the user
-var typingFragment = typingProfileRecorder.TypingFragment;
+var typingFragment = typingProfileRecorder.TypingFragment; // only relevant for fixed internal text
 
 
 //attach event handlers to the entry widget that will accept the user's typing of the fragment
@@ -141,7 +152,7 @@ typingProfileRecorder.OnTextChanged(newText);
 
 //when the user has completed typing the fragment (note that typed fragment MUST match typingProfileRecorder.TypingFragment) call ->
 
-var typingProfileMatchingResult = await typingProfileRecorder.MatchTypingProfile();
+var typingProfileMatchingResult = await session.TypingProfileMatcher.MatchTypingProfile(typingProfileRecorder);
 
 //handle result
 if(typingProfileMatchingResult.IsEnrolledOnThisDevice){
