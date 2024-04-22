@@ -21,7 +21,8 @@ their Xamarin applications.
 
 ### 2) Ensure Standalone  Moneyguard App is installed
 
-The standalone MoneyGuard App is required to receive information about user and device risk profile. 
+The standalone MoneyGuard App is required to receive information about user and device risk profile. You must add 
+query for package 'com.wimika.moneyguard' to your manifest.
 
 ```java
 
