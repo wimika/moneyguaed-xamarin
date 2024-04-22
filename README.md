@@ -16,7 +16,8 @@ their Xamarin applications.
 ## Usage For Android
 
 ### 1) Add Nuget Packages to Your Project
-- Android Project - (Wimika.MoneyGuard.Core.Android) ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Android)
+- Wimika.MoneyGuard.Core.Android ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Android)
+- Wimika.MoneyGuard.Application ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Application)
 
 
 ### 2) Initialize MoneyGuard 
