@@ -176,7 +176,7 @@ else{
 }
 
 ```
-Sample project in this repository performs Typing Profile Check [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/TypingProfileMatchingActivity.cs#L61)
+Sample project in this repository performs Typing Profile Check [here](https://github.com/wimika/moneyguard-xamarin/blob/a965440b5d9a60a942c2280e8d48986293f924a5/XamarinAndroidProject/TypingProfileMatchingActivity.cs#L76)
 
 ### 6) Debit Transaction Check
 
