@@ -10,26 +10,18 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main">
 
-        <EditText
-        android:id="@+id/editTextUsername"
+        <TextView
+        android:id="@+id/textViewWarning"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:hint="Username"
-        android:inputType="text" />
+        android:layout_height="120dp" />
 
-    <!-- Password EditText -->
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:hint="Password"
-        android:inputType="textPassword" />
+
 
     <!-- Login Button -->
     <Button
-        android:id="@+id/buttonLogin"
+        android:id="@+id/buttonProceed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login" />
+        android:text="Proceed To Login" />
 
 </LinearLayout>

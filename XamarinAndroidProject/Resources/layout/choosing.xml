@@ -37,5 +37,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Match Typing Profile" />
-
+     <Button
+        android:id="@+id/buttonInstallMoneyguard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Install Moneyguard" />
 </LinearLayout>
