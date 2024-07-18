@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Android.Widget;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 using Wimika.MoneyGuard.Core.Types;
+using static System.Net.Mime.MediaTypeNames;
+using Wimika.MoneyGuard.Application;
 
 namespace AndroidTestApp
 {
@@ -38,30 +40,30 @@ namespace AndroidTestApp
             var button = FindViewById(Resource.Id.buttonProceed);
             button.Click += ProceedClick;
              
-
-
-            var s = await MoneyGuardSdk.Startup(this); 
-
-            if(s.MoneyGuardActive)
+            var startupRisk = await MoneyGuardSdk.Startup(this); 
+            if(startupRisk.MoneyGuardActive)
             {
-                var risky = false;
-                foreach(var r in s.Risks)
+                //Assess prelaunch risk
+                switch (startupRisk.PreLaunchVerdict.Decision)
                 {
-                    if(r.Status != RiskStatus.RISK_STATUS_SAFE)
-                    {
-                        risky = true;
+                    case PreLaunchDecision.Launch:
+                        text.Text = "proceed to launch app";
                         break;
-                    }
+                    case PreLaunchDecision.DoNotLaunch:
+                        text.Text = "do not launch app";
+                        break;
+                    case PreLaunchDecision.LaunchWithWarning:
+                        text.Text = "launch app with warning";
+                        break;
+                    case PreLaunchDecision.LaunchWith2FA:
+                        text.Text = "Request 2FA before launching app";
+                        break;
                 }
-                text.Text = risky ? "The WiFi network you are connected to is not secure. Your digital banking activities may be compromised if you proceed with logging in and transacting" : "Your Wifi Connection is Secure";
             }
             else
             {
                 text.Text = "Moneyguard not active";
             }
-
-            
-
         }
 
         private async void ProceedClick(object sender, EventArgs eventArgs)

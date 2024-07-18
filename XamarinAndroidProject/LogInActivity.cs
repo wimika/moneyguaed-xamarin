@@ -19,24 +19,27 @@ namespace AndroidTestApp
     {
 
 
-            private EditText usernameEditText;
-            private EditText passwordEditText;
+        private EditText usernameEditText;
+        private EditText passwordEditText;
 
-            private const int WIMIKA_XAMARIN_BANK = 101;
+        private const int WIMIKA_XAMARIN_BANK = 101;
 
         Wimika.MoneyGuard.Core.Types.ITypingProfileRecorder recorder;
 
-            protected async override void OnCreate(Bundle savedInstanceState)
-            {
-                base.OnCreate(savedInstanceState);
-                Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-                SetContentView(Resource.Layout.login);
+        protected async override void OnCreate(Bundle savedInstanceState)
+        {
 
-                var button = FindViewById(Resource.Id.buttonLogin);
-                button.Click += LoginClick;
+            base.OnCreate(savedInstanceState);
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            SetContentView(Resource.Layout.login);
 
-                usernameEditText = FindViewById<EditText>(Resource.Id.editTextUsername);
-                passwordEditText = FindViewById<EditText>(Resource.Id.editTextPassword);
+
+
+            var button = FindViewById(Resource.Id.buttonLogin);
+            button.Click += LoginClick;
+
+            usernameEditText = FindViewById<EditText>(Resource.Id.editTextUsername);
+            passwordEditText = FindViewById<EditText>(Resource.Id.editTextPassword);
 
             recorder = MoneyGuardSdk.CreateTypingProfileRecorder(this, TypingProfileParameters.CreateForFixeduserText("email"));
 
@@ -59,97 +62,97 @@ namespace AndroidTestApp
         }
 
         private async void LoginClick(object sender, EventArgs eventArgs)
+        {
+            var response = await new LoginService().Session(usernameEditText.Text, passwordEditText.Text); // partner bank login
+
+            try
             {
+                var session = await MoneyGuardSdk.Register(this, WIMIKA_XAMARIN_BANK, response.Data.SessionId);
+                Console.WriteLine("InstallationId -> " + session.InstallationId);
+                Console.WriteLine("SessionId -> " + session.SessionId);
+                SessionHolder.Session = session;
 
-
-                var response = await new LoginService().Session(usernameEditText.Text, passwordEditText.Text);
-
-                try
+                if (session != null) //if we get session, go ahead with typing profile check
                 {
-                    var session = await MoneyGuardSdk.Register(this, WIMIKA_XAMARIN_BANK, response.Data.SessionId);
-                    Console.WriteLine("InstallationId -> " + session.InstallationId);
-                    Console.WriteLine("SessionId -> " + session.SessionId);
-                    SessionHolder.Session = session;
-                }
-                catch (Exception ex)
-                {
-                    Toast.MakeText(this, ex.Message, ToastLength.Long).Show();
-                    Console.WriteLine(ex.ToString());
-                    return;
-                }
+                    var typingProfileMatchingResult = await SessionHolder.Session.TypingProfileMatcher.MatchTypingProfile(recorder);
+                    var message = "Not Enrolled";
+                    bool notMatched = false;
 
-
-
-            var typingProfileMatchingResult = await SessionHolder.Session.TypingProfileMatcher.MatchTypingProfile(recorder);
-            var message = "Not Enrolled";
-            bool notMatched = false;
-
-            if (typingProfileMatchingResult.IsEnrolledOnThisDevice)
-            {
-                if (typingProfileMatchingResult.Matched)
-                {
-                    if (typingProfileMatchingResult.HighConfidence)
+                    if (typingProfileMatchingResult.IsEnrolledOnThisDevice)
                     {
-                        message = "Enrolled and Matched With High Confidence";
+                        if (typingProfileMatchingResult.Matched)
+                        {
+                            if (typingProfileMatchingResult.HighConfidence)
+                            {
+                                message = "Enrolled and Matched With High Confidence";
+                            }
+                            else
+                            {
+                                message = "Enrolled and Matched With Low Confidence";
+                            }
+                        }
+                        else
+                        {
+                            //typing profile did not match, do not proceed
+                            message = "Not matched";
+                            notMatched = true;
+                        }
                     }
-                    else
+                    else if (typingProfileMatchingResult.HasOtherEnrollments)
                     {
-                        message = "Enrolled and Matched With Low Confidence";
+                        message = "User Account has enrollment on other devices";
                     }
-                }
-                else
-                {
-                    //typing profile did not match, do not proceed
-                    message = "Not matched";
-                    notMatched = true;
+
+                    Toast.MakeText(
+                        this,
+                        message,
+                        ToastLength.Long
+                        ).Show();
+
+
+                    if (notMatched)
+                    {
+                        return;
+                    }
                 }
             }
-            else if (typingProfileMatchingResult.HasOtherEnrollments)
+            catch (Exception ex)
             {
-                message = "User Account has enrollment on other devices";
-            }
-
-            Toast.MakeText(
-                this,
-                message,
-                ToastLength.Long
-                ).Show();
-
-
-            if (notMatched)
-            {
+                Toast.MakeText(this, ex.Message, ToastLength.Long).Show();
+                Console.WriteLine(ex.ToString());
                 return;
             }
 
-            StartActivity(typeof(ChoosingActivity));
-            }
+            //StartActivity(typeof(ChoosingActivity));
+            StartActivity(typeof(DashboardActivity));
+        }
 
-            public override bool OnCreateOptionsMenu(IMenu menu)
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.menu_main, menu);
+            return true;
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            int id = item.ItemId;
+            if (id == Resource.Id.action_settings)
             {
-                MenuInflater.Inflate(Resource.Menu.menu_main, menu);
                 return true;
             }
 
-            public override bool OnOptionsItemSelected(IMenuItem item)
-            {
-                int id = item.ItemId;
-                if (id == Resource.Id.action_settings)
-                {
-                    return true;
-                }
-
-                return base.OnOptionsItemSelected(item);
-            }
-
-
-
-            public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
-            {
-                Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-                base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
+            return base.OnOptionsItemSelected(item);
         }
-    
+
+
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        {
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
 
 }
