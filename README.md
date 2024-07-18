@@ -277,3 +277,7 @@ foreach(var specificRisk in result.Risks){
 
 ```
 Sample project in this repository performs GetRiskProfile [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/ChoosingActivity.cs#L46)
+
+Sample project flow:
+
+![alt text](https://raw.githubusercontent.com/tunde-wimika/moneyguard-xamarin/main/XamarinAndroidProject/flow.png)
