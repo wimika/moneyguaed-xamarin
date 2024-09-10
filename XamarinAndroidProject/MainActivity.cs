@@ -14,6 +14,7 @@ using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 using Wimika.MoneyGuard.Core.Types;
 using static System.Net.Mime.MediaTypeNames;
 using Wimika.MoneyGuard.Application;
+using System.Linq;
 
 namespace AndroidTestApp
 {
@@ -43,6 +44,8 @@ namespace AndroidTestApp
             var startupRisk = await MoneyGuardSdk.Startup(this); 
             if(startupRisk.MoneyGuardActive)
             {
+                var issueList = startupRisk.Risks.Where(r => r.Status != RiskStatus.RISK_STATUS_SAFE 
+                && r.Status != RiskStatus.RISK_STATUS_UNKNOWN).Select(x => x.StatusSummary).ToList();
                 //Assess prelaunch risk
                 switch (startupRisk.PreLaunchVerdict.Decision)
                 {
@@ -50,15 +53,16 @@ namespace AndroidTestApp
                         text.Text = "proceed to launch app";
                         break;
                     case PreLaunchDecision.DoNotLaunch:
-                        text.Text = "do not launch app";
+                        text.Text = $"do not launch app";
                         break;
                     case PreLaunchDecision.LaunchWithWarning:
-                        text.Text = "launch app with warning";
+                        text.Text = $"launch app with warning";
                         break;
                     case PreLaunchDecision.LaunchWith2FA:
-                        text.Text = "Request 2FA before launching app";
+                        text.Text = $"Request 2FA before launching app";
                         break;
                 }
+                text.Text += System.Environment.NewLine + string.Join(",", issueList);
             }
             else
             {
