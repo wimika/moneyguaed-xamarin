@@ -44,8 +44,7 @@ namespace AndroidTestApp
             var startupRisk = await MoneyGuardSdk.Startup(this); 
             if(startupRisk.MoneyGuardActive)
             {
-                var issueList = startupRisk.Risks.Where(r => r.Status != RiskStatus.RISK_STATUS_SAFE 
-                && r.Status != RiskStatus.RISK_STATUS_UNKNOWN).Select(x => x.StatusSummary).ToList();
+                var issueList = startupRisk.Risks.Where(r => r.Status != RiskStatus.RISK_STATUS_SAFE).Select(x => x.StatusSummary).ToList();
                 //Assess prelaunch risk
                 switch (startupRisk.PreLaunchVerdict.Decision)
                 {
