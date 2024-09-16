@@ -34,9 +34,7 @@ namespace AndroidTestApp
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-
             text = (TextView)FindViewById(Resource.Id.textViewWarning);
-
 
             var button = FindViewById(Resource.Id.buttonProceed);
             button.Click += ProceedClick;
@@ -71,10 +69,7 @@ namespace AndroidTestApp
 
         private async void ProceedClick(object sender, EventArgs eventArgs)
         {
-           
-
             StartActivity(typeof(LogInActivity));
-
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
