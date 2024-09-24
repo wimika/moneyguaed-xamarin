@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wimika.MoneyGuard.Core.Andr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wimika.MoneyGuard.Core.Types", "..\..\..\..\source\repos\Wimika.MoneyGuard.Core.Types\Wimika.MoneyGuard.Core.Types.csproj", "{730AC69B-61F2-4499-B1DA-936879A3FD25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wimika.MoneyGuard.Application.Tools", "..\..\..\..\source\repos\Wimika.MoneyGuard.Application\Wimika.MoneyGuard.Application.Tools.csproj", "{EF6845CA-E4D2-4F92-8F8F-C5AD12AF46E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{730AC69B-61F2-4499-B1DA-936879A3FD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{730AC69B-61F2-4499-B1DA-936879A3FD25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{730AC69B-61F2-4499-B1DA-936879A3FD25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF6845CA-E4D2-4F92-8F8F-C5AD12AF46E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF6845CA-E4D2-4F92-8F8F-C5AD12AF46E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF6845CA-E4D2-4F92-8F8F-C5AD12AF46E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF6845CA-E4D2-4F92-8F8F-C5AD12AF46E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

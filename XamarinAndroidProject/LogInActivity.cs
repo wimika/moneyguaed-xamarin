@@ -8,6 +8,7 @@ using Com.Wimika.Moneyguardcore.Biometrics.Typing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using Wimika.MoneyGuard.Application.REST.ResponseModels;
 using Wimika.MoneyGuard.Application.Tools;
@@ -80,45 +81,57 @@ namespace AndroidTestApp
 
                     if (session != null) //if we get session, go ahead with typing profile check
                     {
-                        var typingProfileMatchingResult = await SessionHolder.Session.TypingProfileMatcher.MatchTypingProfile(recorder);
-                        var message = "Not Enrolled";
-                        bool notMatched = false;
+                        var scanResult = await SessionHolder.Session.CheckCredential(
+                           new Wimika.MoneyGuard.Core.Types.Credential
+                           {
+                               Username = usernameEditText.Text,
+                               LastThreePasswordCharactersHash = ComputeSha256Hash(passwordEditText.Text.Substring(passwordEditText.Text.Length - 3)),
+                               //PasswordFragmentLength = StartingCharactersLength.FOUR,
+                               Domain = "wimika.ng",
+                               HashAlgorithm = Wimika.MoneyGuard.Core.Types.HashAlgorithm.SHA256,
+                               //PasswordStartingCharactersHash = ComputeSha256Hash(passwordEditText.Text.Substring(0, StartingCharactersLength.FOUR.Length))
+                           });
 
-                        if (typingProfileMatchingResult.IsEnrolledOnThisDevice)
-                        {
-                            if (typingProfileMatchingResult.Matched)
-                            {
-                                if (typingProfileMatchingResult.HighConfidence)
-                                {
-                                    message = "Enrolled and Matched With High Confidence";
-                                }
-                                else
-                                {
-                                    message = "Enrolled and Matched With Low Confidence";
-                                }
-                            }
-                            else
-                            {
-                                //typing profile did not match, do not proceed
-                                message = "Not matched";
-                                notMatched = true;
-                            }
-                        }
-                        else if (typingProfileMatchingResult.HasOtherEnrollments)
-                        {
-                            message = "User Account has enrollment on other devices";
-                        }
+                        Toast.MakeText(this, "Credential is " + SessionHolder.StatusAsString(scanResult.Status), ToastLength.Long).Show();
+                        //    var typingProfileMatchingResult = await SessionHolder.Session.TypingProfileMatcher.MatchTypingProfile(recorder);
+                        //    var message = "Not Enrolled";
+                        //    bool notMatched = false;
 
-                        Toast.MakeText(
-                            this,
-                            message,
-                            ToastLength.Long
-                            ).Show();
+                        //    if (typingProfileMatchingResult.IsEnrolledOnThisDevice)
+                        //    {
+                        //        if (typingProfileMatchingResult.Matched)
+                        //        {
+                        //            if (typingProfileMatchingResult.HighConfidence)
+                        //            {
+                        //                message = "Enrolled and Matched With High Confidence";
+                        //            }
+                        //            else
+                        //            {
+                        //                message = "Enrolled and Matched With Low Confidence";
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            //typing profile did not match, do not proceed
+                        //            message = "Not matched";
+                        //            notMatched = true;
+                        //        }
+                        //    }
+                        //    else if (typingProfileMatchingResult.HasOtherEnrollments)
+                        //    {
+                        //        message = "User Account has enrollment on other devices";
+                        //    }
 
-                        if (notMatched)
-                        {
-                            return;
-                        }
+                        //    Toast.MakeText(
+                        //        this,
+                        //        message,
+                        //        ToastLength.Long
+                        //        ).Show();
+
+                        //    if (notMatched)
+                        //    {
+                        //        return;
+                        //    }
                     }
                 }
             }
@@ -159,6 +172,23 @@ namespace AndroidTestApp
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+
+        public static string ComputeSha256Hash(string value)
+        {
+            var sb = new StringBuilder();
+
+            using (var hash = SHA256Managed.Create())
+            {
+                var enc = Encoding.UTF8;
+                var result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (var b in result)
+                    sb.Append(b.ToString("x2"));
+            }
+
+            return sb.ToString();
         }
     }
 
