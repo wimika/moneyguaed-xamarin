@@ -68,6 +68,16 @@ namespace AndroidTestApp
         {
             var response = await new LoginService().Session(usernameEditText.Text, passwordEditText.Text); // partner bank login
 
+            if (response.IsError)
+            {
+                Toast.MakeText(
+                            this,
+                            "Invalid email",
+                            ToastLength.Long
+                            ).Show();
+                return;
+            }
+
             var moneyGuardStatus = await MoneyGuardApp.Status(this, response.Data.SessionId);
 
             try
@@ -93,51 +103,63 @@ namespace AndroidTestApp
                            });
 
                         Toast.MakeText(this, "Credential is " + SessionHolder.StatusAsString(scanResult.Status), ToastLength.Long).Show();
-                        //    var typingProfileMatchingResult = await SessionHolder.Session.TypingProfileMatcher.MatchTypingProfile(recorder);
-                        //    var message = "Not Enrolled";
-                        //    bool notMatched = false;
 
-                        //    if (typingProfileMatchingResult.IsEnrolledOnThisDevice)
-                        //    {
-                        //        if (typingProfileMatchingResult.Matched)
-                        //        {
-                        //            if (typingProfileMatchingResult.HighConfidence)
-                        //            {
-                        //                message = "Enrolled and Matched With High Confidence";
-                        //            }
-                        //            else
-                        //            {
-                        //                message = "Enrolled and Matched With Low Confidence";
-                        //            }
-                        //        }
-                        //        else
-                        //        {
-                        //            //typing profile did not match, do not proceed
-                        //            message = "Not matched";
-                        //            notMatched = true;
-                        //        }
-                        //    }
-                        //    else if (typingProfileMatchingResult.HasOtherEnrollments)
-                        //    {
-                        //        message = "User Account has enrollment on other devices";
-                        //    }
+                        var typingProfileMatchingResult = await SessionHolder.Session.TypingProfileMatcher.MatchTypingProfile(recorder);
+                        var message = "Not Enrolled";
+                        bool notMatched = false;
 
-                        //    Toast.MakeText(
-                        //        this,
-                        //        message,
-                        //        ToastLength.Long
-                        //        ).Show();
+                        if (typingProfileMatchingResult != null)
+                        {
+                            if (typingProfileMatchingResult.IsEnrolledOnThisDevice)
+                            {
+                                if (typingProfileMatchingResult.Matched)
+                                {
+                                    if (typingProfileMatchingResult.HighConfidence)
+                                    {
+                                        message = "Enrolled and Matched With High Confidence";
+                                    }
+                                    else
+                                    {
+                                        message = "Enrolled and Matched With Low Confidence";
+                                    }
+                                }
+                                else
+                                {
+                                    //typing profile did not match, do not proceed
+                                    message = "Not matched";
+                                    notMatched = true;
+                                }
+                            }
+                            else if (typingProfileMatchingResult.HasOtherEnrollments)
+                            {
+                                message = "User Account has enrollment on other devices";
+                            }
+                        }
+                        else
+                        {
+                            Toast.MakeText(
+                           this,
+                           "No typingProfileMatchingResult",
+                           ToastLength.Long
+                           ).Show();
+                        }
 
-                        //    if (notMatched)
-                        //    {
-                        //        return;
-                        //    }
+                        Toast.MakeText(
+                            this,
+                            message,
+                            ToastLength.Long
+                            ).Show();
+
+                        if (notMatched)
+                        {
+                            //return;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Toast.MakeText(this, ex.Message, ToastLength.Long).Show();
+                Toast.MakeText(this, ex.ToString(), ToastLength.Long).Show();
                 Console.WriteLine(ex.ToString());
                 return;
             }
