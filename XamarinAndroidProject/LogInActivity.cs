@@ -7,6 +7,7 @@ using Android.Widget;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using Wimika.MoneyGuard.Application.REST.ResponseModels;
 using Wimika.MoneyGuard.Application.Tools;
@@ -60,6 +61,16 @@ namespace AndroidTestApp
         {
             var response = await new LoginService().Session(usernameEditText.Text, passwordEditText.Text); // partner bank login
 
+            if (response.IsError)
+            {
+                Toast.MakeText(
+                            this,
+                            "Invalid email",
+                            ToastLength.Long
+                            ).Show();
+                return;
+            }
+
             var moneyGuardStatus = await MoneyGuardApp.Status(this, response.Data.SessionId);
 
             try
@@ -73,33 +84,57 @@ namespace AndroidTestApp
 
                     if (session != null) //if we get session, go ahead with typing profile check
                     {
+                        var scanResult = await SessionHolder.Session.CheckCredential(
+                           new Wimika.MoneyGuard.Core.Types.Credential
+                           {
+                               Username = usernameEditText.Text,
+                               LastThreePasswordCharactersHash = ComputeSha256Hash(passwordEditText.Text.Substring(passwordEditText.Text.Length - 3)),
+                               //PasswordFragmentLength = StartingCharactersLength.FOUR,
+                               Domain = "wimika.ng",
+                               HashAlgorithm = Wimika.MoneyGuard.Core.Types.HashAlgorithm.SHA256,
+                               //PasswordStartingCharactersHash = ComputeSha256Hash(passwordEditText.Text.Substring(0, StartingCharactersLength.FOUR.Length))
+                           });
+
+                        Toast.MakeText(this, "Credential is " + SessionHolder.StatusAsString(scanResult.Status), ToastLength.Long).Show();
+
                         var typingProfileMatchingResult = await SessionHolder.Session.TypingProfileMatcher.MatchTypingProfile(recorder);
                         var message = "Not Enrolled";
                         bool notMatched = false;
 
-                        if (typingProfileMatchingResult.IsEnrolledOnThisDevice)
+                        if (typingProfileMatchingResult != null)
                         {
-                            if (typingProfileMatchingResult.Matched)
+                            if (typingProfileMatchingResult.IsEnrolledOnThisDevice)
                             {
-                                if (typingProfileMatchingResult.HighConfidence)
+                                if (typingProfileMatchingResult.Matched)
                                 {
-                                    message = "Enrolled and Matched With High Confidence";
+                                    if (typingProfileMatchingResult.HighConfidence)
+                                    {
+                                        message = "Enrolled and Matched With High Confidence";
+                                    }
+                                    else
+                                    {
+                                        message = "Enrolled and Matched With Low Confidence";
+                                    }
                                 }
                                 else
                                 {
-                                    message = "Enrolled and Matched With Low Confidence";
+                                    //typing profile did not match, do not proceed
+                                    message = "Not matched";
+                                    notMatched = true;
                                 }
                             }
-                            else
+                            else if (typingProfileMatchingResult.HasOtherEnrollments)
                             {
-                                //typing profile did not match, do not proceed
-                                message = "Not matched";
-                                notMatched = true;
+                                message = "User Account has enrollment on other devices";
                             }
                         }
-                        else if (typingProfileMatchingResult.HasOtherEnrollments)
+                        else
                         {
-                            message = "User Account has enrollment on other devices";
+                            Toast.MakeText(
+                           this,
+                           "No typingProfileMatchingResult",
+                           ToastLength.Long
+                           ).Show();
                         }
 
                         Toast.MakeText(
@@ -110,14 +145,14 @@ namespace AndroidTestApp
 
                         if (notMatched)
                         {
-                            return;
+                            //return;
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Toast.MakeText(this, ex.Message, ToastLength.Long).Show();
+                Toast.MakeText(this, ex.ToString(), ToastLength.Long).Show();
                 Console.WriteLine(ex.ToString());
                 return;
             }
@@ -152,6 +187,23 @@ namespace AndroidTestApp
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+
+        public static string ComputeSha256Hash(string value)
+        {
+            var sb = new StringBuilder();
+
+            using (var hash = SHA256Managed.Create())
+            {
+                var enc = Encoding.UTF8;
+                var result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (var b in result)
+                    sb.Append(b.ToString("x2"));
+            }
+
+            return sb.ToString();
         }
     }
 
