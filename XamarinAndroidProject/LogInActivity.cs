@@ -4,7 +4,6 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Com.Wimika.Moneyguardcore.Biometrics.Typing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +18,6 @@ namespace AndroidTestApp
     [Activity(Label = "LogInActivity")]
     public class LogInActivity : Activity
     {
-
-
         private EditText usernameEditText;
         private EditText passwordEditText;
 
@@ -35,8 +32,6 @@ namespace AndroidTestApp
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.login);
 
-
-
             var button = FindViewById(Resource.Id.buttonLogin);
             button.Click += LoginClick;
 
@@ -44,8 +39,6 @@ namespace AndroidTestApp
             passwordEditText = FindViewById<EditText>(Resource.Id.editTextPassword);
 
             recorder = MoneyGuardSdk.CreateTypingProfileRecorder(this, TypingProfileParameters.CreateForFixeduserText("email"));
-
-
 
             usernameEditText.KeyPress += UsernameEditText_KeyPress; ;
             usernameEditText.AfterTextChanged += UsernameEditText_AfterTextChanged; ;
