@@ -145,6 +145,9 @@
     <PackageReference Include="Wimika.MoneyGuard.Core.Types">
       <Version>1.0.13</Version>
     </PackageReference>
+    <PackageReference Include="Wimika.MoneyGuard.Core.Android">
+      <Version>1.0.18</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
     <PackageReference Include="Xamarin.Essentials">
       <Version>1.8.1</Version>
