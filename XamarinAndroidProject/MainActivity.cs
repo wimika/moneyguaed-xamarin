@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using Android.Widget;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 using Wimika.MoneyGuard.Core.Types;
+using static System.Net.Mime.MediaTypeNames;
+using Wimika.MoneyGuard.Application;
+using System.Linq;
 
 namespace AndroidTestApp
 {
@@ -31,45 +34,51 @@ namespace AndroidTestApp
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-
             text = (TextView)FindViewById(Resource.Id.textViewWarning);
-
 
             var button = FindViewById(Resource.Id.buttonProceed);
             button.Click += ProceedClick;
              
-
-
-            var s = await MoneyGuardSdk.Startup(this); 
-
-            if(s.MoneyGuardActive)
+            var startupRisk = await MoneyGuardSdk.Startup(this); 
+            if(startupRisk.MoneyGuardActive)
             {
-                var risky = false;
-                foreach(var r in s.Risks)
+                var issueList = startupRisk.Risks.Where(r => r.Status != RiskStatus.RISK_STATUS_SAFE 
+                && (r.Name == SpecificRisk.SPECIFIC_RISK_DEVICE_ROOT_OR_JAILBREAK_NAME 
+                || r.Name == SpecificRisk.SPECIFIC_RISK_DEVICE_SECURITY_MISCONFIGURATION_LOW_QUALITY_DEVICE_PASSWORD_NAME
+                || r.Name == SpecificRisk.SPECIFIC_RISK_DEVICE_SECURITY_MISCONFIGURATION_USB_DEBUGGING_NAME
+                || r.Name == SpecificRisk.SPECIFIC_RISK_DEVICE_SECURITY_MISCONFIGURATION_INSTALL_UNKNOWN_APPS_ALLOWED_NAME
+                || r.Name == SpecificRisk.SPECIFIC_RISK_NETWORK_DNS_SPOOFING_NAME
+                || r.Name == SpecificRisk.SPECIFIC_RISK_NETWORK_MITM_NAME
+                || r.Name == SpecificRisk.SPECIFIC_RISK_NETWORK_WIFI_ENCRYPTION_NAME
+                || r.Name == SpecificRisk.SPECIFIC_RISK_NETWORK_WIFI_PASSWORD_PROTECTION_NAME)
+                ).Select(x => x.StatusSummary).ToList();
+                //Assess prelaunch risk
+                switch (startupRisk.PreLaunchVerdict.Decision)
                 {
-                    if(r.Status != RiskStatus.RISK_STATUS_SAFE)
-                    {
-                        risky = true;
+                    case PreLaunchDecision.Launch:
+                        text.Text = "proceed to launch app";
                         break;
-                    }
+                    case PreLaunchDecision.DoNotLaunch:
+                        text.Text = $"do not launch app";
+                        break;
+                    case PreLaunchDecision.LaunchWithWarning:
+                        text.Text = $"launch app with warning";
+                        break;
+                    case PreLaunchDecision.LaunchWith2FA:
+                        text.Text = $"Request 2FA before launching app";
+                        break;
                 }
-                text.Text = risky ? "The WiFi network you are connected to is not secure. Your digital banking activities may be compromised if you proceed with logging in and transacting" : "Your Wifi Connection is Secure";
+                text.Text += System.Environment.NewLine + string.Join(",", issueList);
             }
             else
             {
                 text.Text = "Moneyguard not active";
             }
-
-            
-
         }
 
         private async void ProceedClick(object sender, EventArgs eventArgs)
         {
-           
-
             StartActivity(typeof(LogInActivity));
-
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)

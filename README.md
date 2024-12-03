@@ -19,7 +19,7 @@ their Xamarin applications.
 - Wimika.MoneyGuard.Core.Android ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Core.Android)
 - Wimika.MoneyGuard.Application ![NuGet Version](https://img.shields.io/nuget/v/Wimika.MoneyGuard.Application)
 
-### 2) Ensure Standalone  Moneyguard App is installed
+### 2) Ensure Standalone  Moneyguard App is installed And Access Prelaunch Risk
 
 The standalone MoneyGuard App is required to receive information about user and device risk profile. You must add 
 query for package 'com.wimika.moneyguard' to your manifest.
@@ -32,17 +32,34 @@ using Wimika.MoneyGuard.Application;
 
 Task<StartupRisk> startupRisk = await MoneyguardSdk.Startup();
 
+//Ensure money guard is installed
 if(!startupRisk.MoneyguardActive){
   await MoneyGuardApp.Instal();
 }
 
+//Assess prelaunch risk
+switch(startupRisk.PreLaunchVerdict.LaunchDecision){
+
+  case PreLaunchDecision.Launch:
+	//proceed to launch app
+	break;
+  case PreLaunchDecision.DoNotLaunch:
+	//do not launch app
+	break;
+  case PreLaunchDecision.LaunchWithWarning:
+        //launch app with warning
+ 	break;
+  case PreLaunchDecision.LaunchWith2FA:
+	//Request 2FA before launching app
+        break;
+}
 
 ...
 
 ```
-### 3) Initialize MoneyGuard
+### 3) Create MoneyGuard Session
 
-Initialize Moneyguard. An IBasicSession is an implementation of the methods that support the following Moneyguard
+Create Moneyguard Session. An IBasicSession is an implementation of the methods that support the following Moneyguard
 functionality :
  - Obtain an authorization token for MoneyGuard REST API service calls
  - Credential Compromise Check
@@ -260,3 +277,7 @@ foreach(var specificRisk in result.Risks){
 
 ```
 Sample project in this repository performs GetRiskProfile [here](https://github.com/wimika/moneyguard-xamarin/blob/494acf2e78b0b0fd402d7a260935b77184d5e6d9/XamarinAndroidProject/ChoosingActivity.cs#L46)
+
+Sample project flow:
+
+![alt text](https://raw.githubusercontent.com/tunde-wimika/moneyguard-xamarin/main/XamarinAndroidProject/flow.png)
